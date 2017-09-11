@@ -57,5 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
-# avatar folder
-.avatars
+# avatar folder & more
+avatars/
+.DS_Store
