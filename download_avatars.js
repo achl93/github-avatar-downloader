@@ -1,7 +1,8 @@
+require('dotenv').confg();
 const request = require('request');
 const fs = require('fs');
 const GITHUB_USER = "achl93";
-const GITHUB_TOKEN = "aaf5c2635ba1e9d5d19c126d095ed1a1fbd14e6b";
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 // Defines an options object for the http request
 let options = {
