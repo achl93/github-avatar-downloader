@@ -39,9 +39,7 @@ function downloadImageByURL(url, filepath) {
 }
 
 getRepoContributors(process.argv[2], process.argv[3], (err, result) => {
-  // console.log("Errors:", err);
-  // console.log("Results:");
-  // console.log(typeof(result));
+  if (process.argv[2] === undefined || process.argv[3] === undefined) throw new Error('You must pass the parameters as such: node download_avatars.js <repoOwner> <repoName>');
   for (element in result) {
     downloadImageByURL(result[element].avatar_url, './avatars/'+result[element].id+'.jpg');
   }
