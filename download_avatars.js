@@ -3,16 +3,17 @@ const fs = require('fs');
 const GITHUB_USER = "achl93";
 const GITHUB_TOKEN = "aaf5c2635ba1e9d5d19c126d095ed1a1fbd14e6b";
 
+// Defines an options object for the http request
 let options = {
   headers: {
     'User-Agent': 'Github Avatar Downloader - Student Project'
   }
 };
 
+// Accesses the github api to return a JSON object with contributor info
 function getRepoContributors(repoOwner, repoName, cb) {
   let requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
   options.url = requestURL;
-  // console.log(options);
   request(options, (err, response, body) => {
     if (err) {
       return cb(err);
@@ -23,6 +24,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
   });
 }
 
+// Takes a URL and destination filepath to download the image to
 function downloadImageByURL(url, filepath) {
   request.get(url)
     .on('error', (err) => {
@@ -30,7 +32,7 @@ function downloadImageByURL(url, filepath) {
     })
     .pipe(fs.createWriteStream(filepath)
       .on('finish', () => {
-        console.log("Download complete");
+        console.log("Image downloaded");
       })
       .on('error', (err) => {
         throw (err);
@@ -38,6 +40,8 @@ function downloadImageByURL(url, filepath) {
     );
 }
 
+// Calls the getRepoContributors function using command line parameters and supplies the downloadImageByURL
+// function with each contributor's avatar url
 getRepoContributors(process.argv[2], process.argv[3], (err, result) => {
   if (process.argv[2] === undefined || process.argv[3] === undefined) throw new Error('You must pass the parameters as such: node download_avatars.js <repoOwner> <repoName>');
   for (element in result) {
