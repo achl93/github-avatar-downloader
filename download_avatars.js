@@ -1,4 +1,5 @@
 const request = require('request');
+const fs = require('fs');
 const GITHUB_USER = "achl93";
 const GITHUB_TOKEN = "aaf5c2635ba1e9d5d19c126d095ed1a1fbd14e6b";
 
@@ -22,11 +23,26 @@ function getRepoContributors(repoOwner, repoName, cb) {
   });
 }
 
+function downloadImageByURL(url, filepath) {
+  request.get(url)
+    .on('error', (err) => {
+      throw (err);
+    })
+    .pipe(fs.createWriteStream(filepath)
+      .on('finish', () => {
+        console.log("Download complete");
+      })
+      .on('error', (err) => {
+        throw (err);
+      })
+    );
+}
+
 getRepoContributors("jquery", "jquery", (err, result) => {
-  console.log("Errors:", err);
-  console.log("Results:");
+  // console.log("Errors:", err);
+  // console.log("Results:");
   // console.log(typeof(result));
   for (element in result) {
-    console.log(result[element].avatar_url);
+    downloadImageByURL(result[element].avatar_url, './avatars/'+result[element].id+'.jpg');
   }
 });
