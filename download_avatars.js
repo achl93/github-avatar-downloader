@@ -1,8 +1,13 @@
-require('dotenv').confg();
+require('dotenv').config();
 const request = require('request');
 const fs = require('fs');
 const GITHUB_USER = "achl93";
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+if (typeof(GITHUB_TOKEN) !== 'string') {
+  console.log("Your .env variable is missing or invalid");
+  return;
+}
 
 // Defines an options object for the http request
 let options = {
@@ -20,7 +25,14 @@ function getRepoContributors(repoOwner, repoName, cb) {
       return cb(err);
     }
     if (body !== null) {
-      return cb(null, JSON.parse(body));
+      let content = JSON.parse(body);
+      if (content.message === "Not Found") {
+        console.log("This repo does not exist");
+        return;
+      }
+      else {
+        return cb(null, content);
+      }
     }
   });
 }
